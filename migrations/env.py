@@ -14,7 +14,10 @@ config = context.config
 
 # Load db path from .env file
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
-DB_PATH = os.getenv('DB_PATH') or 'sqlite:///./test.db' # Default to sqlite if not found
+DB_PATH = os.getenv('DB_PATH')
+if not DB_PATH:
+    raise ValueError("DB_PATH not found in .env file")
+
 config.set_main_option("sqlalchemy.url", DB_PATH)
 
 # Interpret the config file for Python logging.

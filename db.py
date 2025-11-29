@@ -4,7 +4,10 @@ from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
 
-DATABASE_URL = os.getenv('DB_PATH') or 'sqlite:///./test.db' # Default to sqlite if not found
+DATABASE_URL = os.getenv('DB_PATH')
+if not DATABASE_URL:
+    raise ValueError("DB_PATH not found in .env file")
+
 engine = create_engine(DATABASE_URL, echo=True)
     
 def get_session():
