@@ -41,13 +41,14 @@ def validate_password(password: str) -> str:
     :param password: Password to validate
     :return: Validated password
     """
-    # todo: decide on splitting rules
-    if len(password) < 3:
-        raise ValueError('Password must be at least 3 characters long')
-    if not re.search(r'\d', password):
-        raise ValueError('Password must contain at least one digit')
-    if not re.search(r'[a-z]', password):
-        raise ValueError('Password must contain at least one lowercase letter')
-    if not re.search(r'[A-Z]', password):
-        raise ValueError('Password must contain at least one uppercase letter')
+    is_valid = (
+        len(password) >= 3 and
+        re.search(r'\d', password) and
+        re.search(r'[a-z]', password) and
+        re.search(r'[A-Z]', password)
+    )
+    
+    if not is_valid:
+        raise ValueError('Password does not meet requirements')
+    
     return password

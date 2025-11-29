@@ -97,7 +97,6 @@ async def get_users(session: Session = Depends(get_session),
         query=select(User).where(User.email.like(domain_pattern))
 
     elif criteria == Criteria.REGISTERATION_TODAY:
-        #todo last 24 hours instead of date only
         last_24_hours = datetime.now(tz=ZONE) - timedelta(hours=24)
         
         query=select(User).where(User.registrationTimestamp >= last_24_hours)
