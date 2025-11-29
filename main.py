@@ -117,6 +117,10 @@ async def upload_notification(to_upload: User, session: Session = Depends(get_se
     """
     to_upload.password = hash_user_password(to_upload.password)
     user = User(**to_upload.model_dump())
+    
+    if not user.roles:
+        raise ValueError("User must have at least one role")
+    
     session.add(user)
 
     session.commit()
@@ -153,6 +157,8 @@ async def update_user(email: str, to_update: User, password: str,
         if key not in ["email", "registrationTimestamp"] and value is not None:
             if key == "password":
                 value = hash_user_password(value)
+            elif key == "roles" and not value:
+                raise ValueError("User must have at least one role")
             setattr(user, key, value)
 
     session.add(user)

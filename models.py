@@ -3,7 +3,7 @@ from sqlalchemy import DateTime, ARRAY, String
 from typing import Optional
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from pydantic import field_serializer
+from pydantic import field_serializer, model_serializer
 from enum import Enum
 
 ZONE = ZoneInfo('Asia/Jerusalem')
@@ -29,6 +29,17 @@ class User(SQLModel, table=True):
         if value:
             return value.astimezone(ZONE).isoformat(timespec='milliseconds')
         return None
+    
+    #serialized user the same as example
+    @model_serializer(mode='wrap')
+    def serialize_model(self, handler):
+        data = handler(self)
+        return {
+            'email': data.get('email'),
+            'name': data.get('name'),
+            'registrationTimestamp': data.get('registrationTimestamp'),
+            'roles': data.get('roles'),
+        }
     
 class Config:
     arbitrary_types_allowed = True
