@@ -32,8 +32,6 @@ def hash_user_password(password: str) -> str:
     validate_password(password)
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-    
-    print(f"[hi!!!!!!!!!] in hash function, hashed is: {hashed.decode('utf-8')}")
     return hashed.decode('utf-8')
 
 
