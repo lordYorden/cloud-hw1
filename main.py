@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 import bcrypt
 import re
-from db import init_db, get_session, engine
+from db import get_session, engine
 from sqlmodel import Session, delete, select
 from sqlalchemy.orm import defer
 from fastapi_pagination import add_pagination, Params
@@ -62,16 +62,6 @@ USERS = [
     {"email": "jerbi@example.com", "name": "Jerbi", "password": "Jerbipassword1", "registrationTimestamp": "2025-08-09T14:07:05Z", "roles": ["user"]}
 ]
 
-#on startup
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    init_db()    
-    #init_data()
-    yield
-
-app = FastAPI(lifespan=lifespan)
-add_pagination(app)
-
 def init_data():
     """Initialize the database with predefined users"""
     with Session(engine) as session:
@@ -82,10 +72,14 @@ def init_data():
                 user.password = hash_user_password(user.password)
                 session.add(user)
         session.commit()
+
+app = FastAPI()
+add_pagination(app)
          
 @app.get("/")
-async def ping():
-    """Ping endpoint to check if the server is running"""
+async def ping_and_init():
+    """Ping endpoint to check if the server is running and initialize data"""
+    init_data()
     return {"Hello": "World"}
 
 @app.exception_handler(ValueError)
