@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.responses import JSONResponse
+from sqlalchemy import func
 from models import ZONE, Criteria, User
-from contextlib import asynccontextmanager
 from datetime import datetime
 import bcrypt
 import re
