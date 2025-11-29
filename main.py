@@ -1,12 +1,15 @@
 from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi.responses import JSONResponse
 from models import ZONE, Criteria, User
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 import bcrypt
 import re
 from db import init_db, get_session, engine
-from sqlmodel import Session, select
+from sqlmodel import Session, delete, select
 from sqlalchemy.orm import defer
+from sqlalchemy import func
+from sqlalchemy.exc import SQLAlchemyError
 from fastapi_pagination import Page, add_pagination, Params
 from fastapi_pagination.ext.sqlmodel import paginate
 
@@ -67,15 +70,20 @@ def init_data():
         session.commit()
     
 @app.get("/")
-async def root():
+async def ping():
     return {"Hello": "World"}
 
 @app.exception_handler(ValueError)
 async def value_exception_handler(request: Request, exc: ValueError):
-    raise HTTPException(status_code=401, detail=str(exc))
+    return JSONResponse(status_code=401, content={"detail": str(exc)})
+
+#handles all other exceptions like springboot
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(status_code=500, content={"detail": str(exc)})
 
 @app.post("/users")
-async def upload_notfication(to_upload: User, session: Session = Depends(get_session)) -> User:
+async def upload_notification(to_upload: User, session: Session = Depends(get_session)) -> User:
     #salt = bcrypt.gensalt()
     #validate_password(to_upload.password)
     to_upload.password = hash_user_password(to_upload.password) #= bcrypt.hashpw(to_upload.password.encode('utf-8'), salt).decode('utf-8')
@@ -90,7 +98,7 @@ async def upload_notfication(to_upload: User, session: Session = Depends(get_ses
     return user
 
 @app.get("/users/{email}")
-async def get_user(email: str, password: str, session: Session = Depends(get_session)) -> User:
+async def get_specific_user(email: str, password: str, session: Session = Depends(get_session)) -> User:
     user = authenticate_user(email, password, session)
     
     user.password = "redacted"
@@ -113,13 +121,39 @@ async def update_user(email: str, to_update: User, password: str, session: Sessi
 async def get_users(session: Session = Depends(get_session), criteria: Criteria | None = None, value: str | None = None, params: Params = Depends()) -> list[User]:
     
     if not criteria:
-        page = paginate(query=select(User).options(defer(User.password)), session=session, params=params)
+        page = paginate(query=select(User)
+                        .options(defer(User.password))
+                        ,session=session, params=params)
+        
+    elif not value and criteria != Criteria.REGISTERATION_TODAY:
+        raise HTTPException(status_code=400, detail="Value is required for the specified criteria")
         
     elif criteria == Criteria.ROLE:
-        page = paginate(query=select(User).where(User.roles.any(value)).options(defer(User.password)), session=session, params=params)
+        page = paginate(query=select(User)
+                        .where(User.roles.any(value))
+                        .options(defer(User.password))
+                        ,session=session, params=params)
         
     elif criteria == Criteria.EMAIL_DOMAIN:
         domain_pattern = f"%@{value}"
-        page = paginate(query=select(User).where(User.email.like(domain_pattern)).options(defer(User.password)), session=session, params=params)
+        page = paginate(query=select(User)
+                        .where(User.email.like(domain_pattern))
+                        .options(defer(User.password))
+                        ,session=session, params=params)
+        
+    elif criteria == Criteria.REGISTERATION_TODAY:
+        today = datetime.now(tz=ZONE).date()
+        page = paginate(
+            query=select(User)
+            .where(func.date(User.registrationTimestamp) == today)
+            .options(defer(User.password))
+            ,session=session, params=params)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid criteria")
         
     return page.items
+
+@app.delete("/users/", status_code=204)
+async def delete_all_users(session: Session = Depends(get_session)):
+    session.exec(delete(User))
+    session.commit()
