@@ -2,7 +2,7 @@ from sqlmodel import create_engine, SQLModel, Session
 import os
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 DATABASE_URL = os.getenv('DB_PATH')
 if not DATABASE_URL:
