@@ -5,21 +5,23 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![uv](https://img.shields.io/badge/uv-DE5FE9?logo=uv&logoColor=white)
 
 A User Management REST API built with FastAPI, featuring user registration, authentication, role-based filtering, and pagination.
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| **Framework** | FastAPI |
-| **ORM** | SQLModel |
-| **Database** | PostgreSQL 16 |
-| **Password Hashing** | bcrypt |
-| **Migrations** | Alembic |
-| **Pagination** | fastapi-pagination |
-| **Server** | Uvicorn |
-| **Containerization** | Docker Compose |
+| Category                   | Technology              |
+| -------------------------- | ----------------------- |
+| **Framework**        | FastAPI                 |
+| **ORM**              | SQLModel                |
+| **Database**         | PostgreSQL 16           |
+| **Password Hashing** | bcrypt                  |
+| **Migrations**       | Alembic                 |
+| **Pagination**       | fastapi-pagination      |
+| **Server**           | Uvicorn                 |
+| **Package Manager**  | uv (recommended) or pip |
+| **Containerization** | Docker Compose          |
 
 ## Quick Start
 
@@ -47,7 +49,27 @@ python setup.py
 
 This will install dependencies, start PostgreSQL, run migrations, and launch the server.
 
+> **Note**: The setup script automatically detects and uses [uv](https://docs.astral.sh/uv/) if installed, falling back to pip otherwise.
+
 ### Manual Setup
+
+#### Using uv (recommended)
+
+```bash
+# Install dependencies and create .venv
+uv sync
+
+# Start PostgreSQL
+docker-compose up -d
+
+# Run migrations
+uv run alembic upgrade head
+
+# Start server
+uv run uvicorn app.main:app --host localhost --port 8000
+```
+
+#### Using pip
 
 ```bash
 # Install dependencies
@@ -62,6 +84,24 @@ alembic upgrade head
 # Start server
 uvicorn app.main:app --host localhost --port 8000
 ```
+
+### Running After Setup
+
+After initial setup, PostgreSQL runs automatically so just start the server:
+
+#### Using uv
+
+```bash
+uv run uvicorn app.main:app --host localhost --port 8000
+```
+
+#### Using pip
+
+```bash
+uvicorn app.main:app --host localhost --port 8000
+```
+
+> **Note**: If PostgreSQL isn't running, start it with `docker-compose up -d`
 
 ### API Documentation
 
