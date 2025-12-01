@@ -7,3 +7,5 @@ psycopg2-binary
 bcrypt
 alembic
 python-dotenv
+datetime
+tzdata

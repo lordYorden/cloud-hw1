@@ -1,6 +1,7 @@
 # Cloud HW1 - User Management API
 
-![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)
+![Python Recommended](https://img.shields.io/badge/Recommended-3.13.x-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
@@ -24,7 +25,8 @@ A User Management REST API built with FastAPI, featuring user registration, auth
 
 ### Prerequisites
 
-- Python 3.x
+- Python 3.9+ (recommended: 3.13.x)
+  - *Minimum 3.9 required due to the `zoneinfo` standard library module*
 - Docker & Docker Compose
 
 ### Environment Setup
