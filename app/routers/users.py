@@ -22,6 +22,7 @@ async def create_user(to_upload: User, session: Session = Depends(get_session)) 
     :return: Uploaded User
     """
     to_upload.password = hash_user_password(to_upload.password)
+    to_upload.registrationTimestamp = datetime.now(ZONE)
     user = User(**to_upload.model_dump())
     
     if not user.roles:
