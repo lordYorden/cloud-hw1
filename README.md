@@ -31,6 +31,25 @@ A User Management REST API built with FastAPI, featuring user registration, auth
   - *Minimum 3.9 required due to the `zoneinfo` standard library module*
 - Docker & Docker Compose
 
+### Installing uv
+
+uv is a fast Python package manager.
+
+**Windows/macOS:**
+```bash
+pip install uv
+```
+
+**Linux:**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Verify installation:
+```bash
+uv --version
+```
+
 ### Environment Setup
 
 Copy the example environment file and configure it:
