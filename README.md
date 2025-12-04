@@ -31,6 +31,23 @@ A User Management REST API built with FastAPI, featuring user registration, auth
   - *Minimum 3.9 required due to the `zoneinfo` standard library module*
 - Docker & Docker Compose
 
+### Installing Python
+
+**Windows/macOS:**
+
+Download from [python.org](https://www.python.org/downloads/)
+
+**Linux:**
+```bash
+sudo apt update
+sudo apt install python3 python3-pip
+```
+
+Verify installation:
+```bash
+python --version
+```
+
 ### Installing uv
 
 uv is a fast Python package manager.
