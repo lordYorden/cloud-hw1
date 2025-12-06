@@ -3,8 +3,8 @@ from sqlalchemy import func
 from sqlalchemy.orm import defer
 from sqlmodel import Session, delete, select
 from datetime import datetime, timedelta
-from fastapi_pagination import Params
 from fastapi_pagination.ext.sqlmodel import paginate
+from app.pagination import ZeroBasedParams
 from app.models.user import User
 from app.models.consts import ZONE, Criteria
 from app.database import get_session
@@ -75,7 +75,7 @@ async def update_user(email: str, to_update: User, password: str,
 @router.get("/", response_model_exclude_none=True)
 async def get_users(session: Session = Depends(get_session),
                     criteria: Criteria | None = None, value: str | None = None,
-                    params: Params = Depends()) -> list[User]:
+                    params: ZeroBasedParams = Depends()) -> list[User]:
     """
     Get users based on criteria
     :param session: Database session

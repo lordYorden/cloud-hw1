@@ -1,14 +1,17 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from fastapi_pagination import add_pagination
-
+from fastapi_pagination import add_pagination, set_page
+    
+from app.pagination import ZeroBasedPage 
 from app.routers import users
 from app.autogen import init_data
 
 app = FastAPI()
 add_pagination(app)
 
-# Include routers
+# register custom pagination
+set_page(ZeroBasedPage)
+
 app.include_router(users.router)
 
 
