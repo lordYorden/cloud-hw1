@@ -1,0 +1,7 @@
+1. clone the repo
+2. install pip - sudo apt install python3-pip
+3. install uv - sudo snap install astral-uv --classic
+4. cd to repo
+4. copy paste the .env attached
+5. python3 setup.py
+6. enjoy :)

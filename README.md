@@ -38,12 +38,14 @@ A User Management REST API built with FastAPI, featuring user registration, auth
 Download from [python.org](https://www.python.org/downloads/)
 
 **Linux:**
+
 ```bash
 sudo apt update
 sudo apt install python3 python3-pip
 ```
 
 Verify installation:
+
 ```bash
 python --version
 ```
@@ -53,16 +55,19 @@ python --version
 uv is a fast Python package manager.
 
 **Windows/macOS:**
+
 ```bash
 pip install uv
 ```
 
 **Linux:**
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 Verify installation:
+
 ```bash
 uv --version
 ```
@@ -80,7 +85,7 @@ Then edit `.env` with your database credentials.
 ### Automated Setup
 
 ```bash
-python setup.py
+python3 setup.py
 ```
 
 This will install dependencies, start PostgreSQL, run migrations, and launch the server.
